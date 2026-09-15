@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Settings</h1><div class="card"><p><strong>Lead Source:</strong> 99Acres (locked)</p><p><strong>Database:</strong> {{config.SQLALCHEMY_DATABASE_URI.split(':')[0]}}</p><p class="muted">System configuration should be managed through environment variables in production.</p></div>{% endblock %}

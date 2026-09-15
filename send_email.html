@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="toolbar">
+  <div><h1>Send Email</h1><span class="muted">Message for {{lead.full_name}}</span></div>
+  <a class="btn btn-light" href="{{url_for('lead_detail', lead_id=lead.id)}}">Back to Lead</a>
+</div>
+<div class="card">
+  <form method="post" action="{{url_for('send_lead_email', lead_id=lead.id)}}" class="formgrid">
+    <div><label>To</label><input class="input" type="email" value="{{lead.email}}" readonly></div>
+    <div><label>Subject</label><input class="input" name="subject" value="99Acres CRM Follow-up" required></div>
+    <div class="full"><label>Message</label><textarea name="body" rows="10" required>Hello {{lead.full_name}},
+
+We are following up regarding your property requirement.
+
+Regards,
+99Acres CRM</textarea></div>
+    <div class="full"><button class="btn btn-primary" type="submit">Send Email</button><a class="btn btn-light" href="{{url_for('lead_detail', lead_id=lead.id)}}">Cancel</a></div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+instance/*.db
+instance/*.log
+instance/import_*.json
+.pytest_cache/
+.venv/

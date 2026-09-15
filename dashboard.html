@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div data-live-dashboard class="dashboard-page screenshot-dashboard">
+  <div class="dashboard-topline">
+    <div class="dashboard-search">⌕ <span>Search leads, client name, phone...</span></div>
+    <div class="dashboard-date">▣ &nbsp; 08 Sep 2026 - 14 Sep 2026 <span>⌄</span></div>
+  </div>
+  <div class="dashboard-heading"><div><h1>Dashboard</h1><p>Track your leads and sales progress at a glance.</p></div><a class="btn btn-yellow" href="{{ url_for('add_lead') }}">＋ Add New Lead</a></div>
+
+  <div class="screenshot-kpis">
+    {% for label,key,icon,color,target in [('New Leads','new','＋','blue','New'),('Total Leads','total','♟','green',''),('Qualified','qualified','✓','yellow','Qualified'),('Meeting Done','meeting_done','▣','purple','Meeting Done'),('Proposal Sent','proposal_sent','▤','red','Proposal Sent'),('Active Pipeline','active_pipeline','◈','teal','Active Pipeline'),('Deal Close','deal_closed','⌁','orange','Deal Closed')] %}
+    <a class="screenshot-kpi {{ color }}" href="{{ url_for('leads') }}{% if target %}?status={{ target|urlencode }}{% endif %}"><span class="kpi-symbol">{{ icon }}</span><span class="kpi-name">{{ label }}</span><strong data-kpi="{{ key }}">{{ funnel[key] }}</strong></a>
+    {% endfor %}
+  </div>
+
+  <div class="dashboard-columns">
+    <section class="dashboard-panel overview-panel">
+      <div class="panel-heading"><div><h2>Leads Overview</h2><span>Current pipeline performance</span></div><select class="period-select"><option>This Week</option><option>This Month</option></select></div>
+      <div class="overview-chart">
+        {% for label,key,color in [('New Leads','new','blue'),('Total Leads','total','green'),('Qualified','qualified','yellow'),('Meeting Done','meeting_done','purple'),('Proposal Done','proposal_sent','red'),('Active Pipeline','active_pipeline','teal'),('Deal Close','deal_closed','orange')] %}
+        <a class="chart-column" href="{{ url_for('leads') }}{% if key not in ['total'] %}?status={{ target|urlencode }}{% endif %}"><strong>{{ funnel[key] }}</strong><span class="chart-bar {{ color }}" style="height:{{ ((funnel[key] / max_metric) * 88) if max_metric else 8 }}%"></span><small>{{ label }}</small></a>
+        {% endfor %}
+      </div>
+    </section>
+    <section class="dashboard-panel quick-panel">
+      <div class="panel-heading"><div><h2>Quick Actions</h2><span>Common tasks</span></div></div>
+      <div class="quick-actions"><a href="{{ url_for('add_lead') }}"><b class="quick-icon blue">＋</b><span>Add New Lead</span><i>›</i></a><a href="{{ url_for('import_leads') }}"><b class="quick-icon green">♟</b><span>Import Data</span><i>›</i></a><a href="{{ url_for('followups') }}"><b class="quick-icon purple">▣</b><span>Schedule Follow Up</span><i>›</i></a><a href="{{ url_for('leads') }}?status=Proposal%20Sent"><b class="quick-icon orange">▤</b><span>View Proposals</span><i>›</i></a><a href="{{ url_for('leads') }}?status=Deal%20Closed"><b class="quick-icon teal">⌁</b><span>View Deals</span><i>›</i></a></div>
+    </section>
+  </div>
+
+  <section class="import-summary-strip"><div><span class="eyebrow">IMPORT CALCULATION</span><strong>{{ imported_sheets }}</strong><span> sheets combined</span></div><div><strong>{{ imported_rows }}</strong><span> imported rows accepted</span></div><a class="btn btn-light btn-sm" href="{{ url_for('import_leads') }}">Manage Imported Sheets</a></section>
+
+  <section class="dashboard-panel recent-panel"><div class="panel-heading"><div><h2>Recent Leads</h2><span>Latest activity in your CRM</span></div><a class="view-all" href="{{ url_for('leads') }}">View All →</a></div><div class="recent-table-wrap"><table class="recent-table"><thead><tr><th>Name</th><th>Phone</th><th>Property Type</th><th>Location</th><th>Status</th><th>Follow Up Date</th></tr></thead><tbody>{% for l in latest %}<tr><td><a href="{{ url_for('lead_detail', lead_id=l.id) }}"><strong>{{ l.full_name }}</strong></a></td><td>{{ l.phone }}</td><td>{{ l.property_type or '—' }}</td><td>{{ l.location or l.city or '—' }}</td><td><span class="status-pill status-{{ l.status|lower|replace(' ','-') }}">{{ l.status }}</span></td><td>{{ l.next_followup_date or '—' }}</td></tr>{% else %}<tr><td colspan="6" class="empty-row">No leads match the current filters.</td></tr>{% endfor %}</tbody></table></div></section>
+</div>
+{% endblock %}

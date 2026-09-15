@@ -1,0 +1,11 @@
+-- PostgreSQL/Supabase baseline. Flask SQLAlchemy creates these tables automatically;
+-- use this file as the RLS policy reference when moving auth to Supabase Auth.
+-- Service-role operations should run only server-side.
+-- The application currently uses secure hashed-password sessions for standalone deployment.
+-- For Supabase: map auth.users.id to profiles.id (UUID) and replace server auth with Supabase JWTs.
+
+-- Recommended RLS shape:
+-- profiles: authenticated users can read own profile; admins manage team profiles.
+-- leads: sales employees can select/update leads assigned to auth.uid(); managers/admins can select/update team/all leads.
+-- followups/tasks/notes: access via related lead ownership; managers/admins team scope.
+-- activity_logs: readable where related lead is readable; inserts by server.
