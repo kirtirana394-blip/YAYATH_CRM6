@@ -592,8 +592,8 @@ def too_large(_):
     return "Uploaded file is too large. Maximum size is 25MB.", 413
 
 
-with app.app_context():
-    db.create_all()
+# Database tables are initialized explicitly with the Flask init-db command.
+# Do not call db.create_all() at import time on Vercel/serverless.
 
 
 if __name__ == "__main__":
