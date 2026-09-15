@@ -15,13 +15,14 @@ class Role(str, Enum):
 
 class LeadStatus(str, Enum):
     NEW = "New"
-    DIRECT = "Direct"
-    REFERRAL = "Referral"
-    QUALIFIED = "Qualified"
-    MEETING_DONE = "Meeting Done"
-    PROPOSAL_SENT = "Proposal Sent"
-    ACTIVE_PIPELINE = "Active Pipeline"
+    CONTACTED = "Contacted"
+    INTERESTED = "Interested"
+    FOLLOW_UP_REQUIRED = "Follow-up Required"
+    SITE_VISIT_SCHEDULED = "Site Visit Scheduled"
+    SITE_VISIT_DONE = "Site Visit Done"
+    NEGOTIATION = "Negotiation"
     DEAL_CLOSED = "Deal Closed"
+    DISQUALIFIED = "Disqualified"
 
 
 class Priority(str, Enum):
@@ -69,7 +70,6 @@ class Property(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     deleted_at = db.Column(db.DateTime)
-    import_id = db.Column(db.Integer, db.ForeignKey("import_history.id"), index=True)
 
 
 class Lead(db.Model):
@@ -103,7 +103,6 @@ class Lead(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     deleted_at = db.Column(db.DateTime)
-    import_id = db.Column(db.Integer, db.ForeignKey("import_history.id"), index=True)
 
     property = db.relationship("Property", foreign_keys=[property_id])
     assigned_user = db.relationship("User", foreign_keys=[assigned_to])
